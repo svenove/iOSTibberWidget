@@ -7,33 +7,33 @@
 // v1.5.0 - Laget medium- og large-størrelse widget (foreløpig som 3 separate script)
 // v1.5.1 - Uploaded to GitHub by Daniel Eneström (https://github.com/danielenestrom)
 
-// Finn din token ved å logge på med Tibber-kontoen din her:
+// Find your token by logging in with your Tibber account here:
 // https://developer.tibber.com/settings/accesstoken
-// OBS! Din token er privat, ikke del den med noen!
+// NOTE! Your token is private, don't share it with anyone!
 const TIBBERTOKEN = "476c477d8a039529478ebd690d35ddd80e3308ffc49b59c65b142321aee963a4";
 
-// I de fleste tilfeller skal HOME_NR være 0, men om man har flere abonnement (hus+hytte f.eks)
-// så kan det være at man må endre den til 1 (eller 2). 
-// Prøv 0 først og om det kommer feilmelding, prøv med 1 (og deretter 2).
+// In most cases, the HOME_NR should be 0, but if you have several subscriptions (house + cabin eg) 
+// then you may need to change it to 1 (or 2).
+// Try 0 first and if there is an error message, try with 1 (and then 2).
 const HOME_NR = 0;
 
-// HTML-koden for bakgrunnsfarge på widget (#000000 er svart)
-const BAKGRUNNSFARGE = "#000000";
+// HTML code for background color (#000000 is black)
+const BACKGROUNDCOLOR = "#000000";
 
-// HTML-koden for tekstfarge (#FFFFFF er hvit)
-const TEKSTFARGE = "#FFFFFF";
+// HTML code for text color (#FFFFFF is white)
+const TEXTCOLOR = "#FFFFFF";
 
-// Når prisen denne timen er høyere enn snittprisen i dag, så brukes denne tekstfargen (rød)
-const TEXTFARGE_HOY = "#de4035";
+// When the hourly rate is higher than the day's average rate this color is used (red)
+const TEXTCOLOR_HIGH = "#de4035";
 
 // Når prisen denne timen er lavere enn snittprisen i dag, så brukes denne tekstfargen (grønn)
-const TEXTFARGE_LAV = "#35de3b";
+const TEXTCOLOR_LOW = "#35de3b";
 
 
 
 
-// DU TRENGER IKKE ENDRE NOE LENGRE NED !
-// --------------------------------------
+// YOU DON'T HAVE TO CHANGE ANYTHING BELOW !
+// -----------------------------------------
 
 // GraphQL-spørring
 let body = {
@@ -70,10 +70,10 @@ req.body = JSON.stringify(body)
 req.method = "POST";
 let json = await req.loadJSON()
 
-// Array med alle dagens timepriser
+// Array with all of the day's hourly prices
 let allToday = json["data"]["viewer"]["homes"][HOME_NR]["currentSubscription"]["priceInfo"]["today"]
 
-// Loop igjennom alle dagens timepriser for å finne min/max/snitt
+// Loop through all of the day's hourly prices to find min/max/avg
 let minPrice = 100000
 let maxPrice = 0
 let avgPrice = 0
@@ -86,36 +86,35 @@ for (var i = 0; i < allToday.length; i++) {
 }
 avgPrice = avgPrice / allToday.length * 100
 
-// Hent ut totalt forbruk/kostnad hittil i dag
+// Fetch total usage/cost so far today
 let totCost = Math.round(json["data"]["viewer"]["homes"][HOME_NR]["consumption"]["pageInfo"]["totalCost"])
-let totForbruk = Math.round(json["data"]["viewer"]["homes"][HOME_NR]["consumption"]["pageInfo"]["totalConsumption"])
+let totUsage = Math.round(json["data"]["viewer"]["homes"][HOME_NR]["consumption"]["pageInfo"]["totalConsumption"])
 
-// Hent ut pris i kroner for inneværende time
+// Fetch price in kr for the current hour
 let price = (json["data"]["viewer"]["homes"][HOME_NR]["currentSubscription"]["priceInfo"]["current"]["total"]);
 
-// Omregn til øre
+// Recalculate to øre/öre
 let priceOre = Math.round(price * 100)
 
-// Hent Tibber-logoen
+// Fetch the Tibber logo
 const TIBBERLOGO = await new Request("https://tibber.imgix.net/zq85bj8o2ot3/6FJ8FvW8CrwUdUu2Uqt2Ns/3cc8696405a42cb33b633d2399969f53/tibber_logo_blue_w1000.png").loadImage()
 
-
-// Opprett widget
+// Create widget
 async function createWidget() {
   // Create new empty ListWidget instance
   let lw = new ListWidget();
 
   // Set new background color
-  lw.backgroundColor = new Color(BAKGRUNNSFARGE);
+  lw.backgroundColor = new Color(BACKGROUNDCOLOR);
 
-  // Man kan ikke styre når widget henter ny pris
-  // men, prøver her å be widget oppdatere seg etter 1 min over neste time
+  // We can't control when the widget fetches a new price,
+  // but we try to ask the widget to refresh one minute after the next hour
   var d = new Date();
   d.setHours(d.getHours() + 1);
   d.setMinutes(1);
   lw.refreshAfterDate = d;
 
-  // Legg til Tibber-logo i en egen stack
+  // Add the Tibber logo in its own stack
   let stack = lw.addStack()
   stack.addSpacer(12)
   let imgstack = stack.addImage(TIBBERLOGO)
@@ -125,64 +124,64 @@ async function createWidget() {
 
   let stack2 = lw.addStack()
 
-  // Venstre kolonne
+  // Left column
   let stackV = stack2.addStack();
   stackV.layoutVertically()
   stackV.centerAlignContent()
   stackV.setPadding(0, 10, 0, 0)
 
-  // Legg til inneværende pris i v.kolonne
+  // Add current price in left column
   let price = stackV.addText(priceOre + "");
   price.centerAlignText();
   price.font = Font.lightSystemFont(20);
-  // Pris høyere eller lavere enn snitt avgjør farge
+  // Price higher or lower than the daily average defines the color
   if (priceOre < avgPrice)
-    price.textColor = new Color(TEXTFARGE_LAV)
+    price.textColor = new Color(TEXTCOLOR_LOW)
   if (priceOre > avgPrice)
-    price.textColor = new Color(TEXTFARGE_HOY)
+    price.textColor = new Color(TEXTCOLOR_HIGH)
 
   const priceTxt = stackV.addText("øre/kWh");
   priceTxt.centerAlignText();
   priceTxt.font = Font.lightSystemFont(10);
-  priceTxt.textColor = new Color(TEKSTFARGE);
+  priceTxt.textColor = new Color(TEXTCOLOR);
 
-  // Legg til dagens "max | min"-timespris
+    // Add today's "max | min" hourly price
   let maxmin = stackV.addText(minPrice + " | " + maxPrice)
   maxmin.centerAlignText()
   maxmin.font = Font.lightSystemFont(10);
-  maxmin.textColor = new Color(TEKSTFARGE);
+  maxmin.textColor = new Color(TEXTCOLOR);
 
-  // Avstand mellom kolonnene
+  // Distance between the columns
   stack2.addSpacer(20)
 
-  // Høyre kolonne
+  // Right column
   let stackH = stack2.addStack();
   stackH.layoutVertically()
 
-  // Legg til forbruk hittil i dag i h.kolonne
-  let forbruk = stackH.addText(totCost + " kr");
-  forbruk.rightAlignText();
-  forbruk.font = Font.lightSystemFont(16);
-  forbruk.textColor = new Color(TEKSTFARGE);
+  // Add usage so far today in right column
+  let usage = stackH.addText(totCost + " kr");
+  usage.rightAlignText();
+  usage.font = Font.lightSystemFont(16);
+  usage.textColor = new Color(TEXTCOLOR);
 
-  let forbruk2 = stackH.addText(totForbruk + " kWh");
-  forbruk2.rightAlignText();
-  forbruk2.font = Font.lightSystemFont(14);
-  forbruk2.textColor = new Color(TEKSTFARGE);
+  let usage2 = stackH.addText(totUsage + " kWh");
+  usage2.rightAlignText();
+  usage2.font = Font.lightSystemFont(14);
+  usage2.textColor = new Color(TEXTCOLOR);
 
-  let forbrukTxt = stackH.addText("Hittil i dag");
-  forbrukTxt.rightAlignText();
-  forbrukTxt.font = Font.lightSystemFont(10);
-  forbrukTxt.textColor = new Color(TEKSTFARGE);
+  let usageTxt = stackH.addText("Hittil i dag");
+  usageTxt.rightAlignText();
+  usageTxt.font = Font.lightSystemFont(10);
+  usageTxt.textColor = new Color(TEXTCOLOR);
 
-  // Avstand ned til bunntekst
+  // Distance to bottom text
   lw.addSpacer(30)
 
-  // Legg til info om når widget sist hentet prisen
+  // Add info about when the widget was last refreshed
   d = new Date()
   let hour = d.getHours();
 
-  // Omgjør til formatet HH:mm
+  // Convert to the format HH:mm
   if (hour < 10) hour = "0" + hour;
   let min = d.getMinutes();
   if (min < 10) min = "0" + min;
@@ -190,7 +189,7 @@ async function createWidget() {
   let time = lw.addText("Oppdatert: " + hour + ":" + min);
   time.centerAlignText();
   time.font = Font.lightSystemFont(8);
-  time.textColor = new Color(TEKSTFARGE);
+  time.textColor = new Color(TEXTCOLOR);
 
   // Return the created widget
   return lw;
