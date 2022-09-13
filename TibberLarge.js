@@ -9,18 +9,25 @@
 // v2.0.1 - Mulighet for å legge til nettleie
 // v2.0.2 - småfiks på fontfarger, o.l
 // v2.0.3 - Uploaded to GitHub by Daniel Eneström (https://github.com/danielenestrom)
-// v2.0.4 - avrunder pris til hele øre. Trinn-graf. 
+// v2.0.4 - avrunder pris til hele øre. Trinn-graf.
+// v2.0.5 - Legg til valg av HOME_NR som parameter og visning av "bolig-navn" - takk til Marium0505!
 
 // Finn din token ved å logge på med Tibber-kontoen din her:
 // https://developer.tibber.com/settings/accesstoken
 // OBS! Din token er privat, ikke del den med noen!
 
-const TIBBERTOKEN = "476c477d8a039529478ebd690d35ddd80e3308ffc49b59c65b142321aee963a4";
+const TIBBERTOKEN = "5K4MVS-OjfWhK_4yrjOlFe1F6kJXPVf7eQYggo8ebAE";
 
 // I de fleste tilfeller skal HOME_NR være 0, men om man har flere abonnement (hus+hytte f.eks)
 // så kan det være at man må endre den til 1 (eller 2).
 // Prøv 0 først og om det kommer feilmelding, prøv med 1 (og deretter 2).
-const HOME_NR = 0;
+if (args.widgetParameter) {
+	HOME_NUMBER = args.widgetParameter;
+} else {
+	HOME_NUMBER = 0; // Default - brukes om ikke man har lagt til paramter for widgeten og/eller når man ser på widgeten direkte i appen.
+}
+
+const HOME_NR = HOME_NUMBER;
 
 // HTML-koden for bakgrunnsfarge på widget (#000000 er svart)
 const BAKGRUNNSFARGE = "#000000";
@@ -60,6 +67,10 @@ let body = {
   "query": "{ \
     viewer { \
       homes { \
+        appNickname \
+	  	  address { \
+	  	    address1 \
+		} \
         currentSubscription { \
           priceRating { \
             hourly { \
@@ -378,10 +389,14 @@ async function createWidget() {
 
 
   // Avstand ned til grafen
-  lw.addSpacer(25)
+  lw.addSpacer(25);
 
 
-  graphTxt = lw.addText("Timepriser");
+  let HomeNickname = json["data"]["viewer"]["homes"][HOME_NR]["appNickname"];
+  if (HomeNickname != null)
+    graphTxt = lw.addText("Timepriser" + " (" + HomeNickname + ")" );
+  else
+    graphTxt = lw.addText("Timepriser");
   graphTxt.centerAlignText();
   graphTxt.font = Font.lightSystemFont(16);
   graphTxt.textColor = new Color(TEKSTFARGE);
