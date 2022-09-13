@@ -1,15 +1,16 @@
 Many people have wished that there was an iOS widget for the Tibber app, but alas there is none.
 However, Tibber has a fantastic [API](https://developer.tibber.com/), so you can create it yourself!;)
 
+*A BIG thanks to Sven-Ove Bjerkan who shared this code with the community on [this Norwegian home automation forum](https://www.hjemmeautomasjon.no/forums/topic/9453-guide-tibber-widget-for-ios/). @Sven-Ove Bjerkan, if you see this, please reach out and I will make you a contributer of the repository.*
 
 **Here is the procedure**
 1. Download the "Scriptable" app:  https://apps.apple.com/no/app/scriptable/id1405459188
 2. Start the app, press the "+" in the top right corner
 3. Press the text "Untitled Scripts" at the very top and change the name to "TibberSmall"/"TibberMedium"/"TibberLarge" (depending on what size widget you want).
 4. Paste the code from one of the desired files, depending on the size that you want:
-   1. For small widget, paste [this code](/TibberSmall.js) into TibberSmall
-   2. For the medium widget, paste [this code](/TibberMedium.js) into TibberMedium
-   3. For large widget, paste [this code](/TibberLarge.js) into TibberLarge
+   1. For a small widget, paste [this code](/TibberSmall.js) into TibberSmall
+   2. For a medium widget, paste [this code](/TibberMedium.js) into TibberMedium
+   3. For a widget, paste [this code](/TibberLarge.js) into TibberLarge
 
 1. Find your personal Tibber token by logging in with your Tibber account here: https://developer.tibber.com/settings/accesstoken
 
