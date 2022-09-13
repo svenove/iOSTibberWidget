@@ -9,11 +9,14 @@
 // v2.0.1 - Mulighet for å legge til nettleie
 // v2.0.2 - småfiks på fontfarger, o.l
 // v2.0.3 - Uploaded to GitHub by Daniel Eneström (https://github.com/danielenestrom)
+// v2.0.4 - avrunder pris til hele øre. Trinn-graf. 
 
 // Finn din token ved å logge på med Tibber-kontoen din her:
 // https://developer.tibber.com/settings/accesstoken
 // OBS! Din token er privat, ikke del den med noen!
+
 const TIBBERTOKEN = "476c477d8a039529478ebd690d35ddd80e3308ffc49b59c65b142321aee963a4";
+
 // I de fleste tilfeller skal HOME_NR være 0, men om man har flere abonnement (hus+hytte f.eks)
 // så kan det være at man må endre den til 1 (eller 2).
 // Prøv 0 først og om det kommer feilmelding, prøv med 1 (og deretter 2).
@@ -36,7 +39,7 @@ const TIMER_BAKOVER = 3;
 const TIMER_FREMOVER = 21;
 
 // Skal nettleie legges til i beløpene?
-const NETTLEIE = true; // (true eller false)
+const NETTLEIE = false; // (true eller false)
 const NETT_FAST = 198; // I kroner pr mnd
 const NETT_KWH = 35.51; // I øre pr kWh, med punktum som desimaltegn
 
@@ -124,12 +127,17 @@ let maxPrice = 0
 let prices = [];
 let colors = [];
 let pointsize = [];
+
+// Finn neste midnatt
+d.setHours(0);
+d.setDate(d.getDate()+1)
+
 for (let i = iStart; i <= iEnd; i++) {
   if (NETTLEIE) {
     allPrices[i].total = allPrices[i].total+(NETT_KWH/100);
   }
   avgPrice += allPrices[i].total
-  prices.push(allPrices[i].total * 100);
+  prices.push(Math.round(allPrices[i].total * 100));
 
   if (allPrices[i].total * 100 < minPrice)
     minPrice = Math.round(allPrices[i].total * 100)
@@ -138,6 +146,10 @@ for (let i = iStart; i <= iEnd; i++) {
 
   if (i == iNow) {
   	colors.push("'yellow'");
+    pointsize.push(20);
+  }
+  else if (d.getTime() == new Date(allPrices[i].time).getTime()) {
+    colors.push("'cyan'");
     pointsize.push(20);
   }
   else {
@@ -170,6 +182,7 @@ url += encodeURI("{ \
       datasets:[ \
          { \
             label:'Øre pr kWh', \
+            steppedLine:true, \
             data:[ \
                " + prices + " \
             ], \
