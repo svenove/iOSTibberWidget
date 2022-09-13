@@ -8,7 +8,7 @@ However, Tibber has a fantastic [API](https://developer.tibber.com/), so you can
 4. Paste the code from one of the desired files, depending on the size that you want:
    1. For a small widget, paste [this code](/TibberSmall.js) into TibberSmall
    2. For a medium widget, paste [this code](/TibberMedium.js) into TibberMedium
-   3. For a widget, paste [this code](/TibberLarge.js) into TibberLarge
+   3. For a large widget, paste [this code](/TibberLarge.js) into TibberLarge
 
 1. Find your personal Tibber token by logging in with your Tibber account here: https://developer.tibber.com/settings/accesstoken
 
@@ -23,10 +23,15 @@ However, Tibber has a fantastic [API](https://developer.tibber.com/), so you can
 6.  For "Script", select "TibberSmall"/"TibberMedium"/"TibberLarge" (depending on which size widget you selected),
 "When interacting"="Open URL",
 "URL"="tibber://"
+If you have multiple "homes" (cabin, perhaps), enter 0, 1 or 2 (etc) as "parameter" to select which house you want to display.
 
  Widget is now ready to use! :) 
 
+## Input, issues or other discussions
 Feel free to make suggestions for changes or share your own improvements!
+
+Use Github or join the Norwegian home automation community here (english posts also welcome):
+https://www.hjemmeautomasjon.no/forums/topic/9453-guide-tibber-widget-for-ios/
 
 ## Hey, advanced users!
 If you want to edit and test your scripts on a computer and happen to have a Mac, you can try the [Scriptable Beta for Mac](https://scriptable.app/mac-beta/).
