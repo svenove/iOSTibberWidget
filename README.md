@@ -7,8 +7,13 @@ However, Tibber has a fantastic [API](https://developer.tibber.com/), so you can
 3. Press the text "Untitled Scripts" at the very top and change the name to "TibberSmall"/"TibberMedium"/"TibberLarge" (depending on what size widget you want).
 4. Paste the code from one of the desired files, depending on the size that you want:
    1. For a small widget, paste [this code](/TibberSmall.js) into TibberSmall
+   <img src="/img/small.jpg" width="200px" />
+   
    2. For a medium widget, paste [this code](/TibberMedium.js) into TibberMedium
+   <img src="/img/medium.jpeg" width="500px" />
+   
    3. For a large widget, paste [this code](/TibberLarge.js) into TibberLarge
+   <img src="/img/large.jpg" width="500px" />
 
 1. Find your personal Tibber token by logging in with your Tibber account here: https://developer.tibber.com/settings/accesstoken
 
@@ -21,9 +26,9 @@ However, Tibber has a fantastic [API](https://developer.tibber.com/), so you can
 5. Widget is now there with "Select script in widget configurator". Tap and hold on it and select "Edit Widget".
 
 6.  For "Script", select "TibberSmall"/"TibberMedium"/"TibberLarge" (depending on which size widget you selected),
-"When interacting"="Open URL",
-"URL"="tibber://"
-If you have multiple "homes" (cabin, perhaps), enter 0, 1 or 2 (etc) as "parameter" to select which house you want to display.
+ - "When interacting"="Open URL",
+ - "URL"="tibber://"
+ - If you have multiple "homes" (cabin, perhaps), enter 0, 1 or 2 (etc) as "parameter" to select which house you want to display.
 
  Widget is now ready to use! :) 
 
