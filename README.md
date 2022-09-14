@@ -6,13 +6,13 @@ However, Tibber has a fantastic [API](https://developer.tibber.com/), so you can
 2. Start the app, press the "+" in the top right corner
 3. Press the text "Untitled Scripts" at the very top and change the name to "TibberSmall"/"TibberMedium"/"TibberLarge" (depending on what size widget you want).
 4. Paste the code from one of the desired files, depending on the size that you want:
-   1. For a small widget, paste [this code](/TibberSmall.js) into TibberSmall
+   1. For a small widget, paste [this code](/TibberSmall.js?raw=1) into TibberSmall
    <img src="/img/small.jpg" width="200px" />
    
-   2. For a medium widget, paste [this code](/TibberMedium.js) into TibberMedium
+   2. For a medium widget, paste [this code](/TibberMedium.js?raw=1) into TibberMedium
    <img src="/img/medium.jpeg" width="500px" />
    
-   3. For a large widget, paste [this code](/TibberLarge.js) into TibberLarge
+   3. For a large widget, paste [this code](/TibberLarge.js?raw=1) into TibberLarge
    <img src="/img/large.jpg" width="500px" />
 
 1. Find your personal Tibber token by logging in with your Tibber account here: https://developer.tibber.com/settings/accesstoken
