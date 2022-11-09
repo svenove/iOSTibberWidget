@@ -30,6 +30,10 @@ However, Tibber has a fantastic [API](https://developer.tibber.com/), so you can
 
  Widget is now ready to use! :) 
 
+## Widget for lock screen
+If you want a widget for the lock screen, take a look at this:
+https://github.com/nicmar/tibber-widget
+
 ## Input, issues or other discussions
 Feel free to make suggestions for changes or share your own improvements!
 
